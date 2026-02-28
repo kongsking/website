@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Gentle | AI Health Companion</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS Variables for futuristic theme */
+        :root {
+            --bg-dark: #0a0a12;
+            --bg-card: #12121f;
+            --primary-cyan: #00ffd5;
+            --secondary-mint: #00ff88;
+            --accent-pink: #ff00aa;
+            --accent-purple: #8800ff;
+            --text-light: #ffffff;
+            --text-gray: #a0a0b0;
+            --glow-cyan: rgba(0, 255, 213, 0.6);
+            --glow-mint: rgba(0, 255, 136, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(ellipse at 20% 80%, rgba(0, 255, 136, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(136, 0, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 255, 213, 0.05) 0%, transparent 50%),
+                linear-gradient(180deg, #0a0a12 0%, #0f0f1a 100%);
+        }
+
+        .grid-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 213, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 213, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            from { background-position: 0 0; }
+            to { background-position: 40px 40px; }
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            position: relative;
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 20px;
+        }
+
+        .avatar-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            border-top-color: var(--primary-cyan);
+            border-right-color: var(--secondary-mint);
+            animation: ringRotate 4s linear infinite;
+        }
+
+        .avatar-ring::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            left: -8px;
+            right: -8px;
+            bottom: -8px;
+            border-radius: 50%;
+            border: 1px solid transparent;
+            border-top-color: var(--accent-purple);
+            animation: ringRotate 6s linear infinite reverse;
+        }
+
+        @keyframes ringRotate {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .assistant-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--accent-purple));
+            border-radius: 50%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 50px;
+            box-shadow: 
+                0 0 30px var(--glow-cyan),
+                0 0 60px rgba(0, 255, 213, 0.3),
+                inset 0 0 30px rgba(255, 255, 255, 0.1);
+            animation: pulse 3s infinite ease-in-out, glow 2s ease-in-out infinite alternate;
+            position: relative;
+            z-index: 1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes glow {
+            from { box-shadow: 0 0 30px var(--glow-cyan), 0 0 60px rgba(0, 255, 213, 0.3); }
+            to { box-shadow: 0 0 50px var(--glow-cyan), 0 0 80px rgba(0, 255, 213, 0.5); }
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-mint));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            text-shadow: 0 0 30px var(--glow-cyan);
+        }
+
+        header p {
+            color: var(--text-gray);
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        /* Main Container */
+        .main-container {
+            width: 90%;
+            max-width: 700px;
+            background: linear-gradient(135deg, rgba(18, 18, 31, 0.9), rgba(18, 18, 31, 0.7));
+            border-radius: 25px;
+            padding: 30px;
+            margin: 0 auto 30px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(0, 255, 213, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 255, 213, 0.2);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-cyan), transparent);
+        }
+
+        #display-area {
+            min-height: 200px;
+            margin-bottom: 25px;
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 255, 213, 0.1);
+            position: relative;
+        }
+
+        .response-text {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Health Cards */
+        .health-card {
+            background: linear-gradient(135deg, rgba(0, 255, 213, 0.05), rgba(136, 0, 255, 0.05));
+            border: 1px solid rgba(0, 255, 213, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 15px;
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.5s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .health-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(0, 255, 213, 0.1) 50%, transparent 60%);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+
+        .health-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--primary-cyan);
+            margin-bottom: 15px;
+        }
+
+        .health-card img {
+            max-width: 100%;
+            border-radius: 10px;
+            height: 180px;
+            object-fit: cover;
+            margin-top: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .health-card button {
+            background: linear-gradient(135deg, var(--primary-cyan), var(--secondary-mint));
+            border: none;
+            color: var(--bg-dark);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .health-card button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--glow-cyan);
+        }
+
+        .health-card p {
+            color: var(--text-gray);
+            line-height: 1.8;
+        }
+
+        /* Symptom tags */
+        .symptom-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .symptom-tag {
+            padding: 8px 16px;
+            background: rgba(0, 255, 213, 0.1);
+            border: 1px solid rgba(0, 255, 213, 0.3);
+            border-radius: 20px;
+            color: var(--primary-cyan);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .symptom-tag:hover {
+            background: var(--primary-cyan);
+            color: var(--bg-dark);
+            box-shadow: 0 0 20px var(--glow-cyan);
+        }
+
+        /* Medication Schedule */
+        .med-schedule {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .med-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            border-left: 3px solid var(--primary-cyan);
+        }
+
+        .med-time {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--primary-cyan);
+            min-width: 80px;
+        }
+
+        .med-name {
+            flex: 1;
+            font-weight: 500;
+        }
+
+        .med-status {
+            font-size: 1.2rem;
+        }
+
+        .med-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--accent-purple));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        /* Daily Tip */
+        .tip-card {
+            text-align: center;
+        }
+
+        .tip-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .tip-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--secondary-mint);
+            margin-bottom: 10px;
+        }
+
+        /* Call Doctor */
+        .call-card {
+            text-align: center;
+            border-color: var(--accent-pink);
+        }
+
+        .call-card h3 {
+            color: var(--accent-pink);
+        }
+
+        .calling-animation {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 20px 0;
+        }
+
+        .calling-dot {
+            width: 12px;
+            height: 12px;
+            background: var(--accent-pink);
+            border-radius: 50%;
+            animation: callPulse 1.4s infinite;
+        }
+
+        .calling-dot:nth-child(2) { animation-delay: 0.2s; }
+        .calling-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes callPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        /* Mic Button */
+        .mic-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .mic-btn {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--primary-cyan), var(--accent-purple));
+            border: none;
+            border-radius: 50%;
+            font-size: 35px;
+            cursor: pointer;
+            box-shadow: 
+                0 5px 30px var(--glow-cyan),
+                0 0 60px rgba(0, 255, 213, 0.3);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mic-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .mic-btn:hover::before {
+            left: 100%;
+        }
+
+        .mic-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 
+                0 10px 40px var(--glow-cyan),
+                0 0 80px rgba(0, 255, 213, 0.5);
+        }
+
+        .mic-btn.listening {
+            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            animation: micListening 1s infinite;
+        }
+
+        @keyframes micListening {
+            0%, 100% { box-shadow: 0 0 30px rgba(255, 0, 170, 0.5); }
+            50% { box-shadow: 0 0 60px rgba(255, 0, 170, 0.8), 0 0 90px rgba(255, 0, 170, 0.4); }
+        }
+
+        #status-text {
+            color: var(--primary-cyan);
+            font-weight: 700;
+            margin-top: 15px;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+        }
+
+        /* Button Grid */
+        .button-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            background: transparent;
+            border: 2px solid rgba(0, 255, 213, 0.3);
+            color: var(--text-light);
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 213, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .action-btn:hover {
+            border-color: var(--primary-cyan);
+            background: rgba(0, 255, 213, 0.1);
+            box-shadow: 0 0 30px rgba(0, 255, 213, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .action-btn:hover::before {
+            left: 100%;
+        }
+
+        .action-btn span {
+            margin-right: 8px;
+        }
+
+        /* Privacy Notice */
+        .privacy-notice {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            margin-top: 30px;
+            padding: 15px;
+            max-width: 600px;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid rgba(0, 255, 213, 0.1);
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .privacy-notice strong {
+            color: var(--primary-cyan);
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .button-grid { grid-template-columns: 1fr; }
+            .response-text { font-size: 1.2rem; }
+            header h1 { font-size: 1.8rem; }
+            .main-container { padding: 20px; }
+        }
+
+        /* Status indicator */
+        .ai-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 15px;
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid rgba(0, 255, 136, 0.3);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            color: var(--secondary-mint);
+            margin-top: 10px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--secondary-mint);
+            border-radius: 50%;
+            animation: statusPulse 2s infinite;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="animated-bg"></div>
+    <div class="grid-pattern"></div>
+
+    <header>
+        <div class="avatar-container">
+            <div class="avatar-ring"></div>
+            <div class="assistant-avatar">🤖</div>
+        </div>
+        <h1>Dr. Gentle AI</h1>
+        <p>Your Advanced Health Companion</p>
+        <div class="ai-status">
+            <span class="status-dot"></span>
+            <span>SYSTEM ONLINE</span>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <div id="display-area">
+            <p class="response-text" id="doctor-speech">Welcome back. How are you feeling today? Tap the mic to speak with me.</p>
+            <div id="visual-content"></div>
+        </div>
+
+        <div class="mic-container">
+            <button class="mic-btn" id="mic-toggle" onclick="toggleListening()">🎤</button>
+            <p id="status-text">TAP MIC TO SPEAK</p>
+        </div>
+
+        <div class="button-grid">
+            <button class="action-btn" onclick="checkSymptoms()">
+                <span>🔍</span> Check Symptoms
+            </button>
+            <button class="action-btn" onclick="showMeds()">
+                <span>💊</span> Medication Info
+            </button>
+            <button class="action-btn" onclick="getDailyTip()">
+                <span>🌟</span> Health Tip
+            </button>
+            <button class="action-btn" onclick="callDoctor()">
+                <span>📞</span> Contact Doctor
+            </button>
+        </div>
+    </div>
+
+    <div class="privacy-notice">
+        <strong>🔒 Privacy Notice:</strong> Your health information is processed locally on your device using advanced encryption. Please consult a real doctor for medical emergencies.
+    </div>
+
+    <script>
+        // Speech Recognition Setup
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+
+        // Speech Synthesis Setup
+        const synth = window.speechSynthesis;
+
+        const doctorSpeech = document.getElementById('doctor-speech');
+        const visualContent = document.getElementById('visual-content');
+        const micBtn = document.getElementById('mic-toggle');
+        const statusText = document.getElementById('status-text');
+
+        function speak(text) {
+            synth.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.pitch = 1;
+            utterance.rate = 0.9;
+            doctorSpeech.style.animation = 'none';
+            setTimeout(() => doctorSpeech.style.animation = 'fadeIn 0.5s ease-out', 10);
+            doctorSpeech.innerText = text;
+            synth.speak(utterance);
+        }
+
+        function toggleListening() {
+            try {
+                recognition.start();
+                micBtn.classList.add('listening');
+                statusText.innerText = "LISTENING...";
+            } catch (e) {
+                recognition.stop();
+                micBtn.classList.remove('listening');
+                statusText.innerText = "TAP MIC TO SPEAK";
+            }
+        }
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript.toLowerCase();
+            micBtn.classList.remove('listening');
+            statusText.innerText = "Processing: " + transcript;
+            setTimeout(() => statusText.innerText = "TAP MIC TO SPEAK", 2000);
+            processInput(transcript);
+        };
+
+        recognition.onspeechend = () => {
+            recognition.stop();
+            micBtn.classList.remove('listening');
+            statusText.innerText = "TAP MIC TO SPEAK";
+        };
+
+        // Logic Engine
+        function processInput(input) {
+            if (input.includes('hello') || input.includes('hi')) {
+                speak("Hello there! I'm Dr. Gentle AI. How can I help you today?");
+            } else if (input.includes('headache')) {
+                showHeadacheAdvice();
+            } else if (input.includes('medication') || input.includes('pill')) {
+                showMeds();
+            } else if (input.includes('exercise') || input.includes('tip')) {
+                getDailyTip();
+            } else if (input.includes('tired') || input.includes('fatigue')) {
+                speak("I understand you're feeling tired. Make sure you're getting enough sleep and staying hydrated. Would you like a health tip?");
+            } else {
+                speak("I heard you say " + input + ". I can help you check symptoms, remind you about medications, or give you a health tip.");
+            }
+        }
+
+        // Feature: Symptom Checker
+        function checkSymptoms() {
+            speak("I can help you understand what's wrong. Select a symptom or tell me what you feel.");
+            visualContent.innerHTML = `
+                <div class="health-card">
+                    <h3>🔬 SYMPTOM SCANNER</h3>
+                    <p>Select what you're experiencing:</p>
+                    <div class="symptom-tags">
+                        <div class="symptom-tag" onclick="showHeadacheAdvice()">Headache</div>
+                        <div class="symptom-tag" onclick="speak('For chest pain, please seek immediate medical attention. Call emergency services.')">Chest Pain</div>
+                        <div class="symptom-tag" onclick="showFatigueAdvice()">Fatigue</div>
+                        <div class="symptom-tag" onclick="showFeverAdvice()">Fever</div>
+                        <div class="symptom-tag" onclick="showNauseaAdvice()">Nausea</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showFatigueAdvice() {
+            const text = "Feeling tired? Make sure to get 7-9 hours of sleep, stay hydrated, and eat nutritious foods. Consider light exercise to boost energy.";
+            speak(text);
+            visualContent.innerHTML = `
+                <div class="health-card">
+                    <h3>⚡ ENERGY BOOST</h3>
+                    <p>${text}</p>
+                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Rest and wellness">
+                </div>
+            `;
+        }
+
+        function showFeverAdvice() {
+            const text = "For fever, rest and stay hydrated. Take fever-reducing medication if needed. If fever persists above 103°F for more than 3 days, please consult a doctor.";
+            speak(text);
+            visualContent.innerHTML = `
+                <div class="health-card">
+                    <h3>🌡️ FEVER CARE</h3>
+                    <p>${text}</p>
+                </div>
+            `;
+        }
+
+        function showNauseaAdvice() {
+            const text = "For nausea, try ginger tea, small frequent meals, and stay hydrated. Avoid strong smells. If persistent, consult your doctor.";
+            speak(text);
+            visualContent.innerHTML = `
+                <div class="health-card">
+                    <h3>🤢 NAUSEA RELIEF</h3>
+                    <p>${text}</p>
+                </div>
+            `;
+        }
+
+        function showHeadacheAdvice() {
+            const text = "For a mild headache, drink a full glass of water, rest in a quiet room, and try gentle neck stretches. If sharp or persistent, please consult your doctor.";
+            speak(text);
+            visualContent.innerHTML = `
+                <div class="health-card">
+                    <h3>🧠 HEADACHE RELIEF</h3>
+                    <p>${text}</p>
+                    <img src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Person resting">
+                </div>
+            `;
+        }
+
+        // Feature: Medication Reminders
+        function showMeds() {
+            speak("Here are your medications for today. You have your Vitamin D and Blood Pressure pill at 9 AM.");
+            visualContent.innerHTML = `
+                <div class="health-card">
+                    <h3>💊 MEDICATION SCHEDULE</h3>
+                    <div class="med-schedule">
+                        <div class="med-item">
+                            <div class="med-icon">💊</div>
+                            <div class="med-time">9:00 AM</div>
+                            <div class="med-name">Blood Pressure Pill</div>
+                            <div class="med-status">✅</div>
+                        </div>
+                        <div class="med-item">
+                            <div class="med-icon">💊</div>
+                            <div class="med-time">1:00 PM</div>
+                            <div class="med-name">Vitamin D (With Food)</div>
+                            <div class="med-status">⏳</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Feature: Health Tips
+        function getDailyTip() {
+            const tips = [
+                { text: "Walking for just 10 minutes helps your heart stay strong.", icon: "🚶" },
+                { text: "Remember to drink 6 glasses of water today to stay hydrated.", icon: "💧" },
+                { text: "Stretching your arms and legs gently in the morning helps your joints.", icon: "🧘" },
+                { text: "Get 7-9 hours of quality sleep for optimal health.", icon: "😴" },
+                { text: "Eat colorful fruits and vegetables for essential vitamins.", icon: "🍎" }
+            ];
+            const tip = tips[Math.floor(Math.random() * tips.length)];
+            speak(tip.text);
+            visualContent.innerHTML = `
+                <div class="health-card tip-card">
+                    <div class="tip-icon">${tip.icon}</div>
+                    <h3>DAILY WELLNESS TIP</h3>
+                    <p>${tip.text}</p>
+                    <img src="https://images.unsplash.com/photo-1470468969717-61d5d548a059?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Wellness">
+                </div>
+            `;
+        }
+
+        function callDoctor() {
+            speak("I am preparing to call your primary doctor, Dr. Smith. Please confirm on your phone screen.");
+            visualContent.innerHTML = `
+                <div class="health-card call-card">
+                    <h3>📞 CALLING DR. SMITH...</h3>
+                    <div class="calling-animation">
+                        <span class="calling-dot"></span>
+                        <span class="calling-dot"></span>
+                        <span class="calling-dot"></span>
+                    </div>
+                    <p>Phone: 555-0123</p>
+                    <button style="background: var(--accent-pink); border: none; color: white; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 15px;" onclick="speak('Call cancelled')">Cancel Call</button>
+                </div>
+            `;
+        }
+    </script>
+</body>
+</html>
